@@ -35,6 +35,13 @@ paths:
           description: Invalid request data. Occurs, if a required attribute in the request payload is missing. The response payload is empty.
         500:
           description: Internal server error. The response payload is empty.
+    delete:
+      summary: Deletes all power records.
+      responses:
+        204:
+          description: All power records deleted successfully. The response payload is empty.
+        500:
+          description: Internal server error. The response payload is empty.
 
   /records/{record-id}:
     get:
@@ -47,7 +54,7 @@ paths:
           schema:
             type: string
       responses:
-        400:
+        200:
           description: Power record retrieved successfully.
           content:
             application/json:
@@ -57,6 +64,22 @@ paths:
           description: Power record with given ID does not exist. The response payload is empty.
         500:
           description: Internal server error. The response payload is empty.
+    delete:
+      summary: Deletes a specific record.
+      parameters:
+        - in: path
+          required: true
+          name: record-id
+          description: ID of the power record to delete.
+          schema:
+            type: string
+      responses:
+        204:
+          description: Power record deleted successfully. The response payload is empty.
+        500:
+          description: Internal server error. The response payload is empty.
+        404:
+          description: Power record with given ID does not exist. The response payload is empty.
 
 components:
   schemas:
