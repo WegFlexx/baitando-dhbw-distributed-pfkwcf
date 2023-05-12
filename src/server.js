@@ -57,7 +57,7 @@ app.get('/records', (req, res) => {
   });
   
   // POST /records
-  app.post('http://localhost:8080/records', (req, res) => {
+  app.post('/records', (req, res) => {
     const { date, reading } = req.body;
   
     if (!date || !reading) {
