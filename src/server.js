@@ -51,7 +51,7 @@ function readDataFromFile() {
 }
 
 // GET /records
-app.get('/records', (req, res) => {
+app.get('/records', (req, response) => {
     const data = readDataFromFile();
     if (data) {
         response.status(200).json({ items: data, message: 'List of power records retrieved successfully.' });
@@ -61,7 +61,7 @@ app.get('/records', (req, res) => {
 });
   
 // POST /records
-app.post('/records', (req, res) => {
+app.post('/records', (req, response) => {
     const { date, reading } = req.body;
 
     if (!date || !reading) {
@@ -90,7 +90,7 @@ app.post('/records', (req, res) => {
 });
   
 // GET /records/{record-id}
-app.get('/records/:recordId', (req, res) => {
+app.get('/records/:recordId', (req, response) => {
     const { recordId } = req.params;
     const data = readDataFromFile();
     if (data.length === 0) {
@@ -108,7 +108,7 @@ app.get('/records/:recordId', (req, res) => {
 });
   
 // DELETE /records/{record-id}
-app.delete('/records/:recordId', (req, res) => {
+app.delete('/records/:recordId', (req, response) => {
     const { recordId } = req.params;
     const data = readDataFromFile();
     const index = data.findIndex((item) => item.id === recordId);
@@ -129,7 +129,7 @@ app.delete('/records/:recordId', (req, res) => {
 });
   
 // DELETE /records
-app.delete('/records', (req, res) => {
+app.delete('/records', (req, response) => {
     let writingSuccessfull = writeDataToFile([]);
     if (writingSuccessfull === 1) {
         response.status(204).send('All power records deleted successfully. The response payload is empty.');
@@ -140,7 +140,7 @@ app.delete('/records', (req, res) => {
 });
 
 // Error handler
-app.use((err, req, res, next) => {
+app.use((err, req, response, next) => {
     console.error(err);
     response.status(500).send('Internal Server Error');
 });
