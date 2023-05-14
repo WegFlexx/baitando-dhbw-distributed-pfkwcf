@@ -51,29 +51,27 @@ function readDataFromFile() {
 }
 
 // GET /records
-app.get('/records', (req, response) => {
+app.get('/records', (res) => {
     const data = readDataFromFile();
     if (data) {
-        response.json({ items: data });
-        response.status(200).send('List of power records retrieved successfully.')
-    }
-    else {
-        response.status(500).send('Internal server error. The response payload is empty.')
+        res.status(200).json({ items: data, message: 'List of power records retrieved successfully.' });
+    } else {
+        res.status(500).send('Internal server error. The response payload is empty.');
     }
 });
   
 // POST /records
-app.post('/records', (request, response) => {
-    const { date, reading } = request.body;
+app.post('/records', (req, res) => {
+    const { date, reading } = req.body;
 
     if (!date || !reading) {
-        response.status(400).send('Invalid request data. Occurs, if a required attribute in the request payload is missing. The response payload is empty.');
+        res.status(400).send('Invalid request data. Occurs, if a required attribute in the request payload is missing. The response payload is empty.');
         return;
     }
 
-    const isValid = validateRecord(request.body);
+    const isValid = validateRecord(req.body);
     if (!isValid) {
-        response.status(400).send('Invalid request data. Occurs, if a required attribute in the request payload is missing. The response payload is empty.');
+        res.status(400).send('Invalid request data. Occurs, if a required attribute in the request payload is missing. The response payload is empty.');
         return;
     }
 
@@ -84,11 +82,10 @@ app.post('/records', (request, response) => {
     let writingSuccessfull = writeDataToFile(data);
 
     if (writingSuccessfull === 1) {
-        const recordUrl = getRecordUrl(request, id);
-        response.status(201).header('Location', recordUrl).send('Record created successfully. The response payload is empty.');
-    }
-    else {
-        response.status(500).send('Internal server error. The response payload is empty.');
+        const recordUrl = getRecordUrl(req, id);
+        res.status(201).header('Location', recordUrl).send('Record created successfully. The response payload is empty.');
+    } else {
+        res.status(500).send('Internal server error. The response payload is empty.');
     }
 });
   
@@ -96,7 +93,7 @@ app.post('/records', (request, response) => {
 app.get('/records/:recordId', (req, res) => {
     const { recordId } = req.params;
     const data = readDataFromFile();
-    if (data === []) {
+    if (data.length === 0) {
         res.status(500).send('Internal server error. The response payload is empty.');
         return;  
     }
@@ -105,10 +102,8 @@ app.get('/records/:recordId', (req, res) => {
     if (!record) {
         res.status(404).send('Power record with given ID does not exist. The response payload is empty.');
         return;
-    }
-    else {
-        res.json(record);
-        res.status(200).send('Power record retrieved successfully.');
+    } else {
+        res.status(200).json({ items: data, message: 'Power record retrieved successfully.' });
     }
 });
   
