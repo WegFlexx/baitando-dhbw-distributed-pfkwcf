@@ -122,9 +122,11 @@ app.delete('/records/:recordId', (req, response) => {
     let writingSuccessfull = writeDataToFile(data);
     if (writingSuccessfull) {
         response.status(204).send('Power record deleted successfully. The response payload is empty.');
+        return;
     }
     else {
         response.status(500).send('Internal server error. The response payload is empty.');
+        return;
     }
 });
   
