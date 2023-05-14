@@ -103,7 +103,7 @@ app.get('/records/:recordId', (req, res) => {
         res.status(404).send('Power record with given ID does not exist. The response payload is empty.');
         return;
     } else {
-        res.status(200).json({ items: data, message: 'Power record retrieved successfully.' });
+        res.status(200).json({ items: record, message: 'Power record retrieved successfully.' });
     }
 });
   
