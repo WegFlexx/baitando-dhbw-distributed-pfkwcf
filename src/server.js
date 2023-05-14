@@ -51,12 +51,12 @@ function readDataFromFile() {
 }
 
 // GET /records
-app.get('/records', (res) => {
+app.get('/records', (req, res) => {
     const data = readDataFromFile();
     if (data) {
-        res.status(200).json({ items: data, message: 'List of power records retrieved successfully.' });
+        response.status(200).json({ items: data, message: 'List of power records retrieved successfully.' });
     } else {
-        res.status(500).send('Internal server error. The response payload is empty.');
+        response.status(500).send('Internal server error. The response payload is empty.');
     }
 });
   
@@ -65,13 +65,13 @@ app.post('/records', (req, res) => {
     const { date, reading } = req.body;
 
     if (!date || !reading) {
-        res.status(400).send('Invalid request data. Occurs, if a required attribute in the request payload is missing. The response payload is empty.');
+        response.status(400).send('Invalid request data. Occurs, if a required attribute in the request payload is missing. The response payload is empty.');
         return;
     }
 
     const isValid = validateRecord(req.body);
     if (!isValid) {
-        res.status(400).send('Invalid request data. Occurs, if a required attribute in the request payload is missing. The response payload is empty.');
+        response.status(400).send('Invalid request data. Occurs, if a required attribute in the request payload is missing. The response payload is empty.');
         return;
     }
 
@@ -83,9 +83,9 @@ app.post('/records', (req, res) => {
 
     if (writingSuccessfull === 1) {
         const recordUrl = getRecordUrl(req, id);
-        res.status(201).header('Location', recordUrl).send('Record created successfully. The response payload is empty.');
+        response.status(201).header('Location', recordUrl).send('Record created successfully. The response payload is empty.');
     } else {
-        res.status(500).send('Internal server error. The response payload is empty.');
+        response.status(500).send('Internal server error. The response payload is empty.');
     }
 });
   
@@ -94,16 +94,16 @@ app.get('/records/:recordId', (req, res) => {
     const { recordId } = req.params;
     const data = readDataFromFile();
     if (data.length === 0) {
-        res.status(500).send('Internal server error. The response payload is empty.');
+        response.status(500).send('Internal server error. The response payload is empty.');
         return;  
     }
     const record = data.find((item) => item.id === recordId);
 
     if (!record) {
-        res.status(404).send('Power record with given ID does not exist. The response payload is empty.');
+        response.status(404).send('Power record with given ID does not exist. The response payload is empty.');
         return;
     } else {
-        res.status(200).json({ items: record, message: 'Power record retrieved successfully.' });
+        response.status(200).json({ items: record, message: 'Power record retrieved successfully.' });
     }
 });
   
@@ -114,17 +114,17 @@ app.delete('/records/:recordId', (req, res) => {
     const index = data.findIndex((item) => item.id === recordId);
 
     if (index === -1) {
-        res.status(404).send('Power record with given ID does not exist. The response payload is empty.');
+        response.status(404).send('Power record with given ID does not exist. The response payload is empty.');
         return;
     }
 
     data.splice(index, 1);
     let writingSuccessfull = writeDataToFile(data);
     if (writingSuccessfull) {
-        res.status(204).send('Power record deleted successfully. The response payload is empty.');
+        response.status(204).send('Power record deleted successfully. The response payload is empty.');
     }
     else {
-        res.status(500).send('Internal server error. The response payload is empty.');
+        response.status(500).send('Internal server error. The response payload is empty.');
     }
 });
   
@@ -132,15 +132,15 @@ app.delete('/records/:recordId', (req, res) => {
 app.delete('/records', (req, res) => {
     let writingSuccessfull = writeDataToFile([]);
     if (writingSuccessfull === 1) {
-        res.status(204).send('All power records deleted successfully. The response payload is empty.');
+        response.status(204).send('All power records deleted successfully. The response payload is empty.');
     }
     else {
-        res.status(500).send('Internal server error. The response payload is empty.');
+        response.status(500).send('Internal server error. The response payload is empty.');
     }
 });
 
 // Error handler
 app.use((err, req, res, next) => {
     console.error(err);
-    res.status(500).send('Internal Server Error');
+    response.status(500).send('Internal Server Error');
 });
