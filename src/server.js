@@ -32,10 +32,10 @@ function validateRecord(record) {
 function writeDataToFile(data) {
     try {
         fs.writeFileSync(dataFilePath, JSON.stringify(data, null, 2), 'utf8');
-        return true;
+        return 1;
     } catch (writingError) {
         console.error('Error writing data to file:', writingError);
-        return false;
+        return 0;
     }
 }
 
@@ -83,7 +83,7 @@ app.post('/records', (request, response) => {
     data.push(record);
     let writingSuccessfull = writeDataToFile(data);
 
-    if (writingSuccessfull) {
+    if (writingSuccessfull === 1) {
         const recordUrl = getRecordUrl(request, id);
         response.status(201).header('Location', recordUrl).send('Record created successfully. The response payload is empty.');
     }
@@ -136,7 +136,7 @@ app.delete('/records/:recordId', (req, res) => {
 // DELETE /records
 app.delete('/records', (req, res) => {
     let writingSuccessfull = writeDataToFile([]);
-    if (writingSuccessfull) {
+    if (writingSuccessfull === 1) {
         res.status(204).send('All power records deleted successfully. The response payload is empty.');
     }
     else {
