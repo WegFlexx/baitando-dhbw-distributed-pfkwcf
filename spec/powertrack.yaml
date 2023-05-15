@@ -76,10 +76,10 @@ paths:
       responses:
         204:
           description: Power record deleted successfully. The response payload is empty.
-        500:
-          description: Internal server error. The response payload is empty.
         404:
           description: Power record with given ID does not exist. The response payload is empty.
+        500:
+          description: Internal server error. The response payload is empty.
 
 components:
   schemas:

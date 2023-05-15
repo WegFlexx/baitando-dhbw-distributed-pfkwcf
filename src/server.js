@@ -64,7 +64,7 @@ app.get('/records', (req, response) => {
 app.get('/records/:recordId', (req, response) => {
     const { recordId } = req.params;
     const data = readDataFromFile();
-    if (data.length === 0) {
+    if (data === 0) {
         response.status(500).send('Internal server error. The response payload is empty.');
         return;  
     }
