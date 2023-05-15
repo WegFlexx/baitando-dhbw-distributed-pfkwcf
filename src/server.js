@@ -46,17 +46,17 @@ function readDataFromFile() {
       return JSON.parse(data);
     } catch (readingError) {
       console.error('Error reading data from file:', readingError);
-      return [];
+      return 0;
     }
 }
 
 // GET /records
 app.get('/records', (req, response) => {
     const data = readDataFromFile();
-    if (data) {
-        response.status(200).json({ items: data, message: 'List of power records retrieved successfully.' });
-    } else {
+    if (data === 0) {
         response.status(500).send('Internal server error. The response payload is empty.');
+    } else {
+        response.status(200).json({ items: data, message: 'List of power records retrieved successfully.' });
     }
 });
 
