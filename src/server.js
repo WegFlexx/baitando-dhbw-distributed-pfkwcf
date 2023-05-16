@@ -65,13 +65,13 @@ app.get('/records/:recordId', (req, response) => {
     const { recordId } = req.params;
     const data = readDataFromFile();
     if (data === 0) {
-        response.status(500).send('Internal server error. The response payload is empty.');
+        response.status(500).send();
         return;  
     }
     const record = data.find((item) => item.id === recordId);
 
     if (!record) {
-        response.status(404).send('Power record with given ID does not exist. The response payload is empty.');
+        response.status(404).send();
         return;
     } else {
         response.status(200).json({ items: record, message: 'Power record retrieved successfully.' });
