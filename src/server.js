@@ -65,35 +65,35 @@ app.get('/records', (req, res) => {
 });
 
 // GET /records/{record-id}
-app.get('/records/:recordId', (req, response) => {
+app.get('/records/:recordId', (req, res) => {
     const { recordId } = req.params;
     const data = readDataFromFile();
     if (data === 0) {
-        response.status(500).send();
+        res.status(500).send();
         return;  
     }
     const record = data.items.find((item) => item.id === recordId);
 
     if (!record) {
-        response.status(404).send();
+        res.status(404).send();
         return;
     } else {
-        response.status(200).send(record);
+        res.status(200).send(record);
     }
 });
   
 // POST /records
-app.post('/records', (req, response) => {
+app.post('/records', (req, res) => {
     const { date, reading } = req.body;
 
     if (!date || !reading) {
-        response.status(400).send();
+        res.status(400).send();
         return;
     }
 
     const isValid = validateRecord(req.body);
     if (!isValid) {
-        response.status(400).send();
+        res.status(400).send();
         return;
     }
 
@@ -105,49 +105,49 @@ app.post('/records', (req, response) => {
 
     if (writingSuccessfull === 1) {
         const recordUrl = getRecordUrl(req, id);
-        response.status(201).header('Location', recordUrl).send();
+        res.status(201).header('Location', recordUrl).send();
     } else {
-        response.status(500).send();
+        res.status(500).send();
     }
 });
 
 // DELETE /records
-app.delete('/records', (req, response) => {
+app.delete('/records', (req, res) => {
     const emptyData = {"items": []};
     let writingSuccessfull = writeDataToFile(emptyData);
     if (writingSuccessfull === 1) {
-        response.status(204).send();
+        res.status(204).send();
     }
     else {
-        response.status(500).send();
+        res.status(500).send();
     }
 });
 
 // DELETE /records/{record-id}
-app.delete('/records/:recordId', (req, response) => {
+app.delete('/records/:recordId', (req, res) => {
     const { recordId } = req.params;
     const data = readDataFromFile();
     const index = data.items.findIndex((item) => item.id === recordId);
 
     if (index === -1) {
-        response.status(404).send();
+        res.status(404).send();
         return;
     }
 
     data.items.splice(index, 1);
     let writingSuccessfull = writeDataToFile(data);
     if (writingSuccessfull) {
-        response.status(204).send();
+        res.status(204).send();
         return;
     }
     else {
-        response.status(500).send();
+        res.status(500).send();
         return;
     }
 });
 
 // Error handler
-app.use((err, req, response, next) => {
+app.use((err, req, res, next) => {
     console.error(err);
-    response.status(500).send();
+    res.status(500).send();
 });
