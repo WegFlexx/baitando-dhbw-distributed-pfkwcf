@@ -68,7 +68,7 @@ app.get('/records/:recordId', (req, response) => {
         response.status(500).send();
         return;  
     }
-    const record = data.find((item) => item.id === recordId);
+    const record = data.items.find((item) => item.id === recordId);
 
     if (!record) {
         response.status(404).send();
@@ -96,7 +96,7 @@ app.post('/records', (req, response) => {
     const data = readDataFromFile();
     const id = generateId();
     const record = { id, date, reading };
-    data.push(record);
+    data.items.push(record);
     let writingSuccessfull = writeDataToFile(data);
 
     if (writingSuccessfull === 1) {
@@ -122,14 +122,14 @@ app.delete('/records', (req, response) => {
 app.delete('/records/:recordId', (req, response) => {
     const { recordId } = req.params;
     const data = readDataFromFile();
-    const index = data.findIndex((item) => item.id === recordId);
+    const index = data.items.findIndex((item) => item.id === recordId);
 
     if (index === -1) {
         response.status(404).send();
         return;
     }
 
-    data.splice(index, 1);
+    data.items.splice(index, 1);
     let writingSuccessfull = writeDataToFile(data);
     if (writingSuccessfull) {
         response.status(204).send();
