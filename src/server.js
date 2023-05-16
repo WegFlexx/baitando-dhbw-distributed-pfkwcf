@@ -71,7 +71,7 @@ app.get('/records/:recordId', (req, response) => {
     const record = data.find((item) => item.id === recordId);
 
     if (!record) {
-        response.status(404);
+        response.status(404).send();
         return;
     } else {
         response.status(200).json({ items: record, message: 'Power record retrieved successfully.' });
