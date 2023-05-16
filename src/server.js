@@ -14,13 +14,17 @@ app.listen(8080, () => {
     console.log("Server up and running");
 });
 
+// Function to generate a random Id
 function generateId() {
     return crypto.randomUUID();
 }
+
+// Function to get the url of a new created record
 function getRecordUrl(req, recordId) {
     return `${req.protocol}://${req.header('host')}/records/${recordId}`;
 }
 
+// Function to validate a new record
 function validateRecord(record) {
     const dateRegex = new RegExp("^\\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$");
     return record &&
