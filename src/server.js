@@ -54,9 +54,9 @@ function readDataFromFile() {
 app.get('/records', (req, response) => {
     const data = readDataFromFile();
     if (data === 0) {
-        response.status(500).send('Internal server error. The response payload is empty.');
+        response.status(500).send();
     } else {
-        response.status(200).json({ items: data, message: 'List of power records retrieved successfully.' });
+        response.status(200).send(data);
     }
 });
 
