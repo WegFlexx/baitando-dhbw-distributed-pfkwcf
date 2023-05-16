@@ -74,7 +74,7 @@ app.get('/records/:recordId', (req, response) => {
         response.status(404).send();
         return;
     } else {
-        response.status(200).json({ items: record, message: 'Power record retrieved successfully.' });
+        response.status(200).send(record);
     }
 });
   
@@ -83,13 +83,13 @@ app.post('/records', (req, response) => {
     const { date, reading } = req.body;
 
     if (!date || !reading) {
-        response.status(400).send('Invalid request data. Occurs, if a required attribute in the request payload is missing. The response payload is empty.');
+        response.status(400).send();
         return;
     }
 
     const isValid = validateRecord(req.body);
     if (!isValid) {
-        response.status(400).send('Invalid request data. Occurs, if a required attribute in the request payload is missing. The response payload is empty.');
+        response.status(400).send();
         return;
     }
 
@@ -101,9 +101,9 @@ app.post('/records', (req, response) => {
 
     if (writingSuccessfull === 1) {
         const recordUrl = getRecordUrl(req, id);
-        response.status(201).header('Location', recordUrl).send('Record created successfully. The response payload is empty.');
+        response.status(201).header('Location', recordUrl).send();
     } else {
-        response.status(500).send('Internal server error. The response payload is empty.');
+        response.status(500).send();
     }
 });
 
@@ -111,10 +111,10 @@ app.post('/records', (req, response) => {
 app.delete('/records', (req, response) => {
     let writingSuccessfull = writeDataToFile([]);
     if (writingSuccessfull === 1) {
-        response.status(204).send('All power records deleted successfully. The response payload is empty.');
+        response.status(204).send();
     }
     else {
-        response.status(500).send('Internal server error. The response payload is empty.');
+        response.status(500).send();
     }
 });
 
@@ -125,18 +125,18 @@ app.delete('/records/:recordId', (req, response) => {
     const index = data.findIndex((item) => item.id === recordId);
 
     if (index === -1) {
-        response.status(404).send('Power record with given ID does not exist. The response payload is empty.');
+        response.status(404).send();
         return;
     }
 
     data.splice(index, 1);
     let writingSuccessfull = writeDataToFile(data);
     if (writingSuccessfull) {
-        response.status(204).send('Power record deleted successfully. The response payload is empty.');
+        response.status(204).send();
         return;
     }
     else {
-        response.status(500).send('Internal server error. The response payload is empty.');
+        response.status(500).send();
         return;
     }
 });
@@ -144,5 +144,5 @@ app.delete('/records/:recordId', (req, response) => {
 // Error handler
 app.use((err, req, response, next) => {
     console.error(err);
-    response.status(500).send('Internal Server Error');
+    response.status(500).send();
 });
