@@ -55,12 +55,12 @@ function readDataFromFile() {
 }
 
 // GET /records
-app.get('/records', (req, response) => {
+app.get('/records', (req, res) => {
     const data = readDataFromFile();
     if (data === 0) {
-        response.status(500).send();
+        res.status(500).send();
     } else {
-        response.status(200).send(data);
+        res.status(200).send(data);
     }
 });
 
