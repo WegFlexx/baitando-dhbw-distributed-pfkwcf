@@ -109,7 +109,8 @@ app.post('/records', (req, response) => {
 
 // DELETE /records
 app.delete('/records', (req, response) => {
-    let writingSuccessfull = writeDataToFile([]);
+    const emptyData = {"items": []}
+    let writingSuccessfull = writeDataToFile(emptyData);
     if (writingSuccessfull === 1) {
         response.status(204).send();
     }
